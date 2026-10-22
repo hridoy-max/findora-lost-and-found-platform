@@ -44,8 +44,8 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-paper">
-      <div className="w-full max-w-md bg-surface p-8 rounded-xl shadow-sm border border-line">
+    <main className="min-h-screen flex items-center justify-center p-4 bg-paper">
+      <section className="w-full max-w-md bg-surface p-8 rounded-xl shadow-sm border border-line">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-headings font-bold text-ink mb-2">Create Account</h1>
           <p className="text-ink/60">Join the community to help others find their belongings</p>
@@ -68,8 +68,8 @@ const RegisterPage = () => {
           <span className="text-ink/60">Already have an account? </span>
           <Link to="/login" className="text-cobalt font-medium hover:underline">Sign in</Link>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 export default RegisterPage;

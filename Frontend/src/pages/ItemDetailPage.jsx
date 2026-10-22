@@ -39,9 +39,6 @@ const ItemDetailPage = () => {
   } = useQuery({
     queryKey: ['item', id],
     queryFn: () => getItemById(id),
-    onError: (err) => {
-      console.error('Failed to fetch item:', err);
-    }
   });
 
   const {
@@ -60,7 +57,6 @@ const ItemDetailPage = () => {
   const isReporter = user?.id === item.reporter.id;
   const isAdmin = user?.role === 'admin';
 
-  // Status colors based on design tokens
   const statusColors = {
     open: 'bg-cobalt-100 text-cobalt-700 border-cobalt-200',
     claimed: 'bg-found-100 text-found-700 border-found-200',
@@ -74,19 +70,21 @@ const ItemDetailPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <main className="max-w-4xl mx-auto px-4 py-8">
       {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center text-line-500 hover:text-cobalt-600 transition-colors mb-6 group"
-      >
-        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-        <span>Back to search</span>
-      </button>
+      <section className="flex items-center mb-6">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-line-500 hover:text-cobalt-600 transition-colors group"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+          <span>Back to search</span>
+        </button>
+      </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Column: Image & Primary Info */}
-        <div className="space-y-6">
+        <section className="space-y-6">
           <div className="aspect-square rounded-2xl overflow-hidden bg-surface border border-line shadow-sm relative">
             {item.image_url ? (
               <img
@@ -125,10 +123,10 @@ const ItemDetailPage = () => {
               <DetailItem icon={<User className="w-4 h-4" />} label="Reporter" value={item.reporter.full_name} />
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Right Column: Description & Actions */}
-        <div className="flex flex-col space-y-6">
+        <section className="flex flex-col space-y-6">
           <div className="space-y-4">
             <h1 className="text-3xl font-bold text-ink mb-2">{item.title}</h1>
             <p className="text-line-600 leading-relaxed text-lg">
@@ -195,16 +193,16 @@ const ItemDetailPage = () => {
               </Button>
             )}
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 };
 
 const DetailItem = ({ icon, label, value }) => (
   <div className="flex items-start space-x-3">
     <div className="text-cobalt-600 mt-1">{icon}</div>
-    <div>
+    <div className="flex flex-col">
       <p className="text-xs text-line-500 uppercase font-medium tracking-wider">{label}</p>
       <p className="text-ink font-medium">{value}</p>
     </div>
@@ -212,10 +210,10 @@ const DetailItem = ({ icon, label, value }) => (
 );
 
 const ItemDetailSkeleton = () => (
-  <div className="max-w-4xl mx-auto px-4 py-8">
+  <main className="max-w-4xl mx-auto px-4 py-8">
     <div className="h-4 w-32 bg-line-100 rounded animate-pulse mb-6" />
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div className="space-y-6">
+      <section className="space-y-6">
         <div className="aspect-square rounded-2xl bg-line-100 animate-pulse" />
         <div className="bg-surface border border-line rounded-2xl p-6 space-y-4">
           <div className="h-5 w-32 bg-line-100 rounded animate-pulse mb-4" />
@@ -231,8 +229,8 @@ const ItemDetailSkeleton = () => (
             ))}
           </div>
         </div>
-      </div>
-      <div className="flex flex-col space-y-6">
+      </section>
+      <section className="flex flex-col space-y-6">
         <div className="space-y-3">
           <div className="h-8 w-3/4 bg-line-100 rounded animate-pulse" />
           <div className="h-4 w-full bg-line-100 rounded animate-pulse" />
@@ -243,9 +241,9 @@ const ItemDetailSkeleton = () => (
           <div className="h-12 flex-1 bg-line-100 rounded-xl animate-pulse" />
           <div className="h-12 flex-1 bg-line-100 rounded-xl animate-pulse" />
         </div>
-      </div>
+      </section>
     </div>
-  </div>
+  </main>
 );
 
 export default ItemDetailPage;

@@ -3,9 +3,22 @@ import { Link } from 'react-router-dom';
 import { User, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { Badge } from '../ui/Badge';
+import { EmptyState } from '../ui/EmptyState';
 
 const PendingClaimsSection = ({ claims }) => {
-  if (!claims || claims.length === 0) return null;
+  if (!claims || claims.length === 0) {
+    return (
+      <div className="bg-surface border border-line rounded-3xl p-6 space-y-4">
+        <div className="flex items-center gap-2 text-line-500 mb-2">
+          <AlertCircle size={20} />
+          <h3 className="font-bold text-sm">No pending claims</h3>
+        </div>
+        <p className="text-xs text-line-400">
+          All your items are currently claim-free.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-amber-50 border border-amber-100 rounded-3xl p-6 space-y-4">

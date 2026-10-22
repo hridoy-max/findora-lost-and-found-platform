@@ -134,12 +134,12 @@ const AdminUsersPage = () => {
     }
   ];
 
-  if (isLoading) return <div className="p-6"><DataTable columns={columns} data={[]} isLoading={true} /></div>;
+  if (isLoading) return <main className="p-6"><DataTable columns={columns} data={[]} isLoading={true} /></main>;
   if (isError) return <ErrorState message="Could not load users" onRetry={refetch} />;
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
+    <main className="space-y-6 p-6">
+      <header className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-ink">User Management</h1>
           <p className="text-line-600">Manage platform users, roles, and account status.</p>
@@ -148,15 +148,17 @@ const AdminUsersPage = () => {
           <Users size={18} className="mr-2" />
           Create User
         </Button>
-      </div>
+      </header>
 
-      <DataTable
-        columns={columns}
-        data={data?.data || []}
-        isLoading={isLoading}
-        onSort={(key) => setParams({ ...params, sort_by: key })}
-        currentSort={{ key: params.sort_by || 'created_at', order: params.order || 'desc' }}
-      />
+      <section>
+        <DataTable
+          columns={columns}
+          data={data?.data || []}
+          isLoading={isLoading}
+          onSort={(key) => setParams({ ...params, sort_by: key })}
+          currentSort={{ key: params.sort_by || 'created_at', order: params.order || 'desc' }}
+        />
+      </section>
 
       {confirmAction && (
         <ConfirmDialog
@@ -177,7 +179,7 @@ const AdminUsersPage = () => {
           onCancel={() => setConfirmAction(null)}
         />
       )}
-    </div>
+    </main>
   );
 };
 

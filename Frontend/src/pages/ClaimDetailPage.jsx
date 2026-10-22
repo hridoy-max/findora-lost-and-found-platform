@@ -5,6 +5,7 @@ import { getClaimById } from '../api/claims';
 import { recordReturn, getItemReturn } from '../api/returns';
 import { useAuth } from '../context/AuthContext';
 import { ErrorState } from '../components/ui/ErrorState';
+import { Skeleton } from '../components/ui/Skeleton';
 import { Badge } from '../components/ui/Badge';
 import { cn } from '../utils/cn';
 import ContactCard from '../components/claims/ContactCard';
@@ -71,17 +72,19 @@ const ClaimDetailPage = () => {
     (user?.role === 'admin' || claim.item.reporter.id === user?.id);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center text-line-500 hover:text-cobalt-600 transition-colors mb-8 group"
-      >
-        <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-        <span>Back</span>
-      </button>
+    <main className="max-w-4xl mx-auto px-4 py-12">
+      <section className="flex items-center mb-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-line-500 hover:text-cobalt-600 transition-colors group"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+          <span>Back</span>
+        </button>
+      </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
+        <section className="lg:col-span-2 space-y-6">
           <div className="bg-surface border border-line rounded-3xl p-6 md:p-8 shadow-sm space-y-6">
             <div className="flex justify-between items-start">
               <div className="space-y-1">
@@ -131,9 +134,9 @@ const ClaimDetailPage = () => {
               )}
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="space-y-6">
+        <section className="space-y-6">
           {claim.status === 'approved' && (
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-ink px-2">Contact Information</h3>
@@ -163,7 +166,7 @@ const ClaimDetailPage = () => {
               </p>
             </div>
           )}
-        </div>
+        </section>
       </div>
 
       {isDialogOpen && (
@@ -174,7 +177,7 @@ const ClaimDetailPage = () => {
           isPending={returnMutation.isPending}
         />
       )}
-    </div>
+    </main>
   );
 };
 
@@ -198,31 +201,31 @@ const DetailRow = ({ icon, label, value, link }) => {
 
 const ClaimDetailSkeleton = () => {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
+    <main className="max-w-4xl mx-auto px-4 py-12">
       <div className="h-4 w-24 bg-line-100 rounded animate-pulse mb-8" />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
+        <section className="lg:col-span-2 space-y-6">
           <div className="bg-surface border border-line rounded-3xl p-6 space-y-6">
             <div className="flex justify-between">
               <div className="space-y-2">
-                <div className="h-6 w-32 bg-line-100 rounded animate-pulse" />
-                <div className="h-4 w-20 bg-line-100 rounded animate-pulse" />
+                <Skeleton width={150} height={24} />
+                <Skeleton width={100} height={14} />
               </div>
               <div className="space-y-2 text-right">
-                <div className="h-3 w-16 bg-line-100 rounded animate-pulse" />
-                <div className="h-4 w-24 bg-line-100 rounded animate-pulse" />
+                <Skeleton width={60} height={12} />
+                <Skeleton width={80} height={16} />
               </div>
             </div>
             <div className="space-y-4">
-              <div className="h-4 w-full bg-line-100 rounded animate-pulse" />
-              <div className="h-4 w-full bg-line-100 rounded animate-pulse" />
-              <div className="h-24 w-full bg-line-100 rounded animate-pulse" />
+              <Skeleton width="100%" height={20} />
+              <Skeleton width="100%" height={20} />
+              <Skeleton width="100%" height={80} />
             </div>
           </div>
-        </div>
-        <div className="h-64 w-full bg-line-100 rounded-3xl animate-pulse" />
+        </section>
+        <section className="h-64 w-full bg-line-100 rounded-3xl animate-pulse" />
       </div>
-    </div>
+    </main>
   );
 };
 

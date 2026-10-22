@@ -7,7 +7,7 @@ import { cn } from '../../utils/cn';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, isAuthenticated, isAdmin } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
   const navLinks = [
@@ -71,8 +71,8 @@ const Navbar = () => {
                         Admin Panel
                       </Link>
                     )}
-                    <button 
-                      onClick={() => window.dispatchEvent(new CustomEvent('auth-logout'))} // Simple trigger
+                    <button
+                      onClick={logout}
                       className="flex items-center gap-3 px-4 py-2 text-sm text-danger hover:bg-paper transition-colors w-full text-left"
                     >
                       <LogOut size={16} /> Sign Out
@@ -123,7 +123,10 @@ const Navbar = () => {
               {isAdmin && (
                 <Link to="/admin" onClick={() => setIsOpen(false)} className="text-cobalt font-bold py-2">Admin Panel</Link>
               )}
-              <button onClick={() => { /* logout */ }} className="text-danger py-2 text-left">Sign Out</button>
+              <button onClick={() => {
+                logout();
+                setIsOpen(false);
+              }} className="text-danger py-2 text-left">Sign Out</button>
             </>
           ) : (
             <div className="flex flex-col gap-3">

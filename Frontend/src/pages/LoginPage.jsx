@@ -29,30 +29,30 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-paper">
-      <div className="w-full max-w-md bg-surface p-8 rounded-xl shadow-sm border border-line">
+    <main className="min-h-screen flex items-center justify-center p-4 bg-paper">
+      <section className="w-full max-w-md bg-surface p-8 rounded-xl shadow-sm border border-line">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-headings font-bold text-ink mb-2">Welcome Back</h1>
           <p className="text-ink/60">Sign in to manage your lost and found items</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Input 
-            label="Email" 
-            type="email" 
-            value={email} 
-            onChange={e => setEmail(e.target.value)} 
-            required 
+          <Input
+            label="Email"
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
             placeholder="name@example.com"
           />
-          <Input 
-            label="Password" 
-            type="password" 
-            value={password} 
-            onChange={e => setPassword(e.target.value)} 
-            required 
+          <Input
+            label="Password"
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
           />
-          
+
           {error && (
             <div className="p-3 rounded-md bg-danger/10 text-danger text-sm font-medium">
               {error}
@@ -71,8 +71,8 @@ const LoginPage = () => {
             <Link to="/forgot-password" className="text-cobalt hover:underline">Forgot password?</Link>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

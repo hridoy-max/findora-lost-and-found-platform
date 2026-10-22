@@ -1,16 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Calendar, MapPin } from 'lucide-react';
+import { Package, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '../../utils/cn';
 import { Badge } from '../ui/Badge';
+import { EmptyState } from '../ui/EmptyState';
 
 const RecentItemsList = ({ items }) => {
   if (!items || items.length === 0) {
     return (
-      <div className="text-center py-8 bg-surface border border-line rounded-3xl">
-        <p className="text-sm text-line-500">No recent reports found.</p>
-      </div>
+      <EmptyState
+        title="No recent reports"
+        description="You haven't reported any items lately. Start by reporting a found item to help the community."
+        action={{
+          label: "Report Item",
+          onClick: () => window.location.href = '/report/new'
+        }}
+      />
     );
   }
 
@@ -26,7 +32,7 @@ const RecentItemsList = ({ items }) => {
             <div className="w-10 h-10 rounded-xl bg-line-50 flex items-center justify-center text-line-400 group-hover:text-cobalt-600 transition-colors">
               <Package size={20} />
             </div>
-            <div>
+            <div className="flex flex-col">
               <p className="text-sm font-bold text-ink group-hover:text-cobalt-600 transition-colors">{item.title}</p>
               <p className="text-xs text-line-500 flex items-center gap-1">
                 <Calendar size={12} />

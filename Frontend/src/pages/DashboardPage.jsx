@@ -27,8 +27,8 @@ const DashboardPage = () => {
   if (!data) return <ErrorState message="Dashboard data unavailable" />;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">
-      <div className="flex justify-between items-end">
+    <main className="max-w-6xl mx-auto px-4 py-12 space-y-10">
+      <header className="flex justify-between items-end">
         <div>
           <h1 className="text-3xl font-bold text-ink">Welcome back!</h1>
           <p className="text-line-600">Here is a summary of your activity.</p>
@@ -43,9 +43,9 @@ const DashboardPage = () => {
             Report Item
           </Button>
         </div>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           label="Total Reports"
           value={data.my_items_total}
@@ -66,7 +66,7 @@ const DashboardPage = () => {
           value={data.my_claims_by_status?.pending || 0}
           icon={MessageSquare}
         />
-      </div>
+      </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
@@ -79,13 +79,13 @@ const DashboardPage = () => {
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
 const DashboardSkeleton = () => (
-  <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">
-    <div className="flex justify-between items-end">
+  <main className="max-w-6xl mx-auto px-4 py-12 space-y-10">
+    <header className="flex justify-between items-end">
       <div className="space-y-2">
         <div className="h-8 w-48 bg-line-100 rounded animate-pulse" />
         <div className="h-4 w-64 bg-line-100 rounded animate-pulse" />
@@ -94,12 +94,12 @@ const DashboardSkeleton = () => (
         <div className="h-10 w-24 bg-line-100 rounded-xl animate-pulse" />
         <div className="h-10 w-32 bg-line-100 rounded-xl animate-pulse" />
       </div>
-    </div>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    </header>
+    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {[1, 2, 3, 4].map(i => (
         <div key={i} className="h-24 w-full bg-line-100 rounded-3xl animate-pulse" />
       ))}
-    </div>
+    </section>
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <div className="lg:col-span-2 space-y-6">
         <div className="h-6 w-40 bg-line-100 rounded animate-pulse mb-4" />
@@ -111,7 +111,7 @@ const DashboardSkeleton = () => (
       </div>
       <div className="h-64 w-full bg-line-100 rounded-3xl animate-pulse" />
     </div>
-  </div>
+  </main>
 );
 
 export default DashboardPage;

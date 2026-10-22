@@ -115,12 +115,12 @@ const AdminCategoriesPage = () => {
     }
   ];
 
-  if (isLoading) return <div className="p-6"><DataTable columns={columns} data={[]} isLoading={true} /></div>;
+  if (isLoading) return <main className="p-6"><DataTable columns={columns} data={[]} isLoading={true} /></main>;
   if (isError) return <ErrorState message="Could not load categories" onRetry={refetch} />;
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
+    <main className="space-y-6 p-6">
+      <header className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-ink">Category Management</h1>
           <p className="text-line-600">Organize reports into logical categories.</p>
@@ -132,15 +132,17 @@ const AdminCategoriesPage = () => {
           <Plus size={18} className="mr-2" />
           New Category
         </Button>
-      </div>
+      </header>
 
-      <DataTable
-        columns={columns}
-        data={data?.data || []}
-        isLoading={isLoading}
-        onSort={(key) => setParams({ ...params, sort_by: key })}
-        currentSort={{ key: params.sort_by || 'name', order: params.order || 'asc' }}
-      />
+      <section>
+        <DataTable
+          columns={columns}
+          data={data?.data || []}
+          isLoading={isLoading}
+          onSort={(key) => setParams({ ...params, sort_by: key })}
+          currentSort={{ key: params.sort_by || 'name', order: params.order || 'asc' }}
+        />
+      </section>
 
       {confirmAction && (
         <ConfirmDialog
@@ -164,7 +166,7 @@ const AdminCategoriesPage = () => {
         onSave={(formData) => saveMutation.mutate({ ...formData, id: selectedCategory?.id })}
         initialData={selectedCategory}
       />
-    </div>
+    </main>
   );
 };
 

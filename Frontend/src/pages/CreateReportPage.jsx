@@ -46,27 +46,27 @@ const CreateReportPage = () => {
   const categories = categoryData?.data || [];
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-12">
-      <div className="text-center mb-10">
+    <main className="max-w-3xl mx-auto px-4 py-12">
+      <header className="text-center mb-10">
         <h1 className="text-3xl font-bold text-ink mb-3">Report an Item</h1>
         <p className="text-line-600">
           Fill out the details below to help the community find what was lost or return what was found.
         </p>
-      </div>
+      </header>
 
-      <div className="bg-surface border border-line rounded-3xl p-6 md:p-10 shadow-sm">
+      <section className="bg-surface border border-line rounded-3xl p-6 md:p-10 shadow-sm">
         <ItemForm
           onSubmit={handleFormSubmit}
           isSubmitting={mutation.isPending}
           categories={categories}
         />
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 
 const ReportPageSkeleton = () => (
-  <div className="max-w-3xl mx-auto px-4 py-12">
+  <main className="max-w-3xl mx-auto px-4 py-12">
     <div className="text-center mb-10 space-y-3">
       <div className="h-8 w-48 bg-line-100 rounded-full mx-auto animate-pulse" />
       <div className="h-4 w-64 bg-line-100 rounded-full mx-auto animate-pulse" />
@@ -82,7 +82,7 @@ const ReportPageSkeleton = () => (
       <div className="h-40 w-full bg-line-100 rounded-xl animate-pulse" />
       <div className="h-12 w-32 bg-line-100 rounded-xl animate-pulse ml-auto" />
     </div>
-  </div>
+  </main>
 );
 
 export default CreateReportPage;

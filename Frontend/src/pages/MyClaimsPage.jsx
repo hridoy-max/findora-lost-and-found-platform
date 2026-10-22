@@ -23,23 +23,25 @@ const MyClaimsPage = () => {
   const claims = claimsData?.data || [];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12">
-      <div className="text-center mb-10">
+    <main className="max-w-4xl mx-auto px-4 py-12">
+      <header className="text-center mb-10">
         <h1 className="text-3xl font-bold text-ink mb-3">My Claims</h1>
         <p className="text-line-600">Track the progress of your ownership claims.</p>
-      </div>
+      </header>
 
-      <ClaimsList
-        claims={claims}
-        viewMode="claimant"
-        onClaimClick={(id) => window.location.href = `/claims/${id}`}
-      />
-    </div>
+      <section>
+        <ClaimsList
+          claims={claims}
+          viewMode="claimant"
+          onClaimClick={(id) => window.location.href = `/claims/${id}`}
+        />
+      </section>
+    </main>
   );
 };
 
 const MyClaimsSkeleton = () => (
-  <div className="max-w-4xl mx-auto px-4 py-12">
+  <main className="max-w-4xl mx-auto px-4 py-12">
     <div className="text-center mb-10 space-y-3">
       <div className="h-8 w-48 bg-line-100 rounded-full mx-auto animate-pulse" />
       <div className="h-4 w-64 bg-line-100 rounded-full mx-auto animate-pulse" />
@@ -49,7 +51,7 @@ const MyClaimsSkeleton = () => (
         <div key={i} className="h-20 w-full bg-line-100 rounded-2xl animate-pulse" />
       ))}
     </div>
-  </div>
+  </main>
 );
 
 export default MyClaimsPage;

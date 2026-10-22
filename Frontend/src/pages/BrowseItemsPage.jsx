@@ -47,8 +47,8 @@ const BrowseItemsPage = () => {
   const totalPages = data?.total_pages || 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+    <main className="max-w-7xl mx-auto px-4 py-8">
+      <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-headings font-bold text-ink">Browse Items</h1>
           <p className="text-ink/60">Search through the community's lost and found reports</p>
@@ -56,7 +56,7 @@ const BrowseItemsPage = () => {
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => setParam('item_type', 'all')}>Clear All</Button>
         </div>
-      </div>
+      </section>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters Sidebar */}
@@ -114,7 +114,7 @@ const BrowseItemsPage = () => {
         </aside>
 
         {/* Results Area */}
-        <main className="flex-1">
+        <section className="flex-1">
           {isLoading && !data ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
@@ -147,9 +147,9 @@ const BrowseItemsPage = () => {
               />
             </>
           )}
-        </main>
+        </section>
       </div>
-    </div>
+    </main>
   );
 };
 

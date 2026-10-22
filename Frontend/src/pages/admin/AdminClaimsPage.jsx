@@ -101,19 +101,19 @@ const AdminClaimsPage = () => {
     }
   ];
 
-  if (isLoading) return <div className="p-6"><DataTable columns={columns} data={[]} isLoading={true} /></div>;
+  if (isLoading) return <main className="p-6"><DataTable columns={columns} data={[]} isLoading={true} /></main>;
   if (isError) return <ErrorState message="Could not load claims" onRetry={refetch} />;
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
+    <main className="space-y-6 p-6">
+      <header className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-ink">Claims Oversight</h1>
           <p className="text-line-600">Monitor and manage all item claims across the platform.</p>
         </div>
-      </div>
+      </header>
 
-      <div className="flex border-b border-line">
+      <nav className="flex border-b border-line">
         <button
           onClick={() => {
             setActiveTab('all');
@@ -142,16 +142,18 @@ const AdminClaimsPage = () => {
         >
           Pending Review
         </button>
-      </div>
+      </nav>
 
-      <DataTable
-        columns={columns}
-        data={data?.data || []}
-        isLoading={isLoading}
-        onSort={(key) => setParams({ ...params, sort_by: key })}
-        currentSort={{ key: params.sort_by || 'created_at', order: params.order || 'desc' }}
-      />
-    </div>
+      <section>
+        <DataTable
+          columns={columns}
+          data={data?.data || []}
+          isLoading={isLoading}
+          onSort={(key) => setParams({ ...params, sort_by: key })}
+          currentSort={{ key: params.sort_by || 'created_at', order: params.order || 'desc' }}
+        />
+      </section>
+    </main>
   );
 };
 

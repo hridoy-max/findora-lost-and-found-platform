@@ -4,6 +4,7 @@ import { Badge } from '../ui/Badge';
 import { cn } from '../../utils/cn';
 import { Calendar, User, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
+import { EmptyState } from '../ui/EmptyState';
 
 const ClaimsList = ({
   claims = [],
@@ -12,9 +13,14 @@ const ClaimsList = ({
 }) => {
   if (!claims || claims.length === 0) {
     return (
-      <div className="text-center py-12 px-4">
-        <p className="text-line-500">No claims found.</p>
-      </div>
+      <EmptyState
+        title={viewMode === 'reporter' ? "No claims to review" : "No claims found"}
+        description={viewMode === 'reporter' ? "All your items are currently claim-free." : "You haven't claimed any items yet. Browse items to start."}
+        action={{
+          label: viewMode === 'reporter' ? "Browse Items" : "Explore Items",
+          onClick: () => window.location.href = '/items'
+        }}
+      />
     );
   }
 
@@ -36,7 +42,7 @@ const ClaimsList = ({
             <div className="hidden sm:block p-3 bg-line-50 rounded-xl text-line-400 group-hover:text-cobalt-600 transition-colors">
               {viewMode === 'reporter' ? <User size={20} /> : <PackageIcon size={20} />}
             </div>
-            <div>
+            <div className="flex flex-col">
               <div className="flex items-center gap-2 mb-1">
                 <span className="font-semibold text-ink">
                   {viewMode === 'reporter' ? claim.claimant.full_name : claim.item.title}
@@ -64,7 +70,6 @@ const ClaimsList = ({
   );
 };
 
-// Simple internal icon for items
 const PackageIcon = ({ size }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="m7.5 4.27 9 5.15" />
