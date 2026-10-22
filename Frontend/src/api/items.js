@@ -1,5 +1,4 @@
 import { apiClient } from './client';
-import { config } from '../config';
 
 /**
  * @typedef {import('./types').ItemResponse} ItemResponse

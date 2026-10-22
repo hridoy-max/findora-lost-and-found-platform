@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -6,7 +6,6 @@ import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { FormField } from '../ui/FormField';
-import { Badge } from '../ui/Badge';
 
 const userSchema = z.object({
   full_name: z.string().min(2, 'Full name must be at least 2 characters').max(100),

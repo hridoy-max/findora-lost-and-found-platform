@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { cn } from '../../utils/cn';
 import { Skeleton } from '../ui/Skeleton';
 import { EmptyState } from '../ui/EmptyState';

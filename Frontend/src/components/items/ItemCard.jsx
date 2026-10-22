@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import { cn } from '../../utils/cn';
 import { Calendar, MapPin, Tag } from 'lucide-react';

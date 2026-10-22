@@ -1,5 +1,3 @@
-import React from 'react';
-import { User, Activity, Package, ShieldCheck } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 const StatCard = ({ label, value, icon: Icon, className }) => {

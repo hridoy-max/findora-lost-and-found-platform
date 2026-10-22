@@ -1,11 +1,11 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import { User, AlertCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { Badge } from '../ui/Badge';
-import { EmptyState } from '../ui/EmptyState';
 
 const PendingClaimsSection = ({ claims }) => {
+
   if (!claims || claims.length === 0) {
     return (
       <div className="bg-surface border border-line rounded-3xl p-6 space-y-4">

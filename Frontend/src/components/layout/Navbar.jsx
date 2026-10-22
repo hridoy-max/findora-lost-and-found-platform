@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Button } from '../../components/ui/Button';
 import { Menu, X, User, LogOut, LayoutDashboard, Package, User as UserIcon } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, isAuthenticated, isAdmin, logout } = useAuth();
-  const navigate = useNavigate();
 
   const navLinks = [
     { name: 'Browse', path: '/items' },
@@ -21,10 +19,6 @@ const Navbar = () => {
     { name: 'My Claims', path: '/my-claims', icon: Package },
     { name: 'Profile', path: '/profile', icon: UserIcon },
   ];
-
-  const handleLogout = async () => {
-    // logout is handled by AuthContext
-  };
 
   return (
     <nav className="bg-surface border-b border-line sticky top-0 z-50">

@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const Footer = () => (
   <footer className="bg-surface border-t border-line py-8 mt-auto">

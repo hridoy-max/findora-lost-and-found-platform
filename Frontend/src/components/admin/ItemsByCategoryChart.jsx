@@ -1,6 +1,5 @@
-import React from 'react';
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { cn } from '../../utils/cn';
 
 const CHART_COLORS = ['#2F54EB', '#0E8F7E', '#C2570C', '#C2273D', '#DDE1E8', '#BDBDBD', '#6B7280'];
 

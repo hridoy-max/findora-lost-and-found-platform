@@ -4,6 +4,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import GuestRoute from './routes/GuestRoute';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import { Toaster } from 'sonner';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -59,6 +60,7 @@ function App() {
           </Routes>
         </main>
         <Footer />
+        <Toaster position="top-right" richColors />
       </div>
     </AuthProvider>
   );

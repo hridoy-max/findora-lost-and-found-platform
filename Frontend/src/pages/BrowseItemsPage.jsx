@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { normalizeList } from '../utils/normalizeList';
 import { ItemCard } from '../components/items/ItemCard';
 import { Pagination } from '../components/ui/Pagination';
-import { Skeleton } from '../components/ui/Skeleton';
-import { EmptyState } from '../components/ui/EmptyState';
+import { EmptyState, ErrorState } from '../components/ui/EmptyState';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { Badge } from '../components/ui/Badge';
 import { useListParams } from '../hooks/useListParams';
 
 const BrowseItemsPage = () => {

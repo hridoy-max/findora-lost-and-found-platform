@@ -19,7 +19,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    try { await authApi.logout(); } catch {}
+    try {
+      await authApi.logout();
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
     finally {
       clearTokens();
       setUser(null);
@@ -44,7 +48,9 @@ export const AuthProvider = ({ children }) => {
           const res = await authApi.refresh(refreshTkn);
           applyTokenResponse(res);
         }
-      } catch {} finally {
+      } catch (err) {
+        console.error("Token refresh failed:", err);
+      } finally {
         setIsLoading(false);
       }
     };

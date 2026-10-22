@@ -7,6 +7,11 @@ export const Modal = ({ isOpen, onClose, children, title, className = '' }) => {
   useEffect(() => {
     if (isOpen) {
       dialogRef.current?.showModal();
+      // Focus the first focusable element in the modal
+      const focusable = dialogRef.current?.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (focusable && focusable.length > 0) {
+        focusable[0].focus();
+      }
     } else {
       dialogRef.current?.close();
     }

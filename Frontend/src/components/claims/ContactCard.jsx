@@ -1,10 +1,9 @@
-import React from 'react';
-import { User, Mail, Phone } from 'lucide-react';
-import { Badge } from '../ui/Badge';
-import { cn } from '../../utils/cn';
 
-const ContactCard = ({ contact, role }) => {
+import { User, Mail, Phone } from 'lucide-react';
+
+const ContactCard = ({ contact }) => {
   if (!contact) return null;
+
 
   return (
     <div className="bg-cobalt-50 border border-cobalt-100 rounded-3xl p-6 space-y-4">

@@ -1,5 +1,5 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+
+
 import { useQuery } from '@tanstack/react-query';
 import { getMyClaims } from '../api/claims';
 import { Skeleton } from '../components/ui/Skeleton';

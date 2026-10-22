@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+
+
 import { Badge } from '../ui/Badge';
 import { cn } from '../../utils/cn';
 import { Calendar, User, ChevronRight } from 'lucide-react';

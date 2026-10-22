@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../ui/Button';
 import { Modal } from '../ui/Modal';
 import { CheckCircle, Info } from 'lucide-react';
 
 const RecordReturnDialog = ({
-  claimId,
   onClose,
   onSuccess,
   isPending = false

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { getUserDashboard } from '../api/users';
 import { Button } from '../components/ui/Button';
@@ -69,15 +69,15 @@ const DashboardPage = () => {
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
+        <section className="lg:col-span-2 space-y-6">
           <h3 className="text-xl font-bold text-ink">My Recent Reports</h3>
           <RecentItemsList items={data.recent_items} />
-        </div>
-        <div className="lg:col-span-1">
+        </section>
+        <section className="lg:col-span-1">
           <PendingClaimsSection
             claims={data.pending_claims_on_my_items?.recent || []}
           />
-        </div>
+        </section>
       </div>
     </main>
   );

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getItemClaims, reviewClaim } from '../api/claims';
 import { useAuth } from '../context/AuthContext';
@@ -12,9 +12,10 @@ import { Package, ShieldCheck } from 'lucide-react';
 
 const ItemClaimsPage = () => {
   const { id: itemId } = useParams();
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user } = useAuth();
+
+  const [selectedClaim, setSelectedClaim] = useState(null);
 
   const {
     data: claimsData,
@@ -46,7 +47,6 @@ const ItemClaimsPage = () => {
   if (isError) return <ErrorState message="Could not load claims" onRetry={refetch} />;
 
   const claims = claimsData?.data || [];
-  const [selectedClaim, setSelectedClaim] = useState(null);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
