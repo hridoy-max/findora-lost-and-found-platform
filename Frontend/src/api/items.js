@@ -1,4 +1,5 @@
 import { uploadItemImage } from './storage';
+import { apiClient } from './client';
 
 /**
  * @typedef {import('./types').ItemResponse} ItemResponse

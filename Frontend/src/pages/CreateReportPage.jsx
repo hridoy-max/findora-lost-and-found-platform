@@ -32,6 +32,7 @@ const CreateReportPage = () => {
       navigate(`/items/${newItem.id}`);
     },
     onError: (error) => {
+      console.error('Submission Error:', error);
       toast.error(error.response?.data?.detail || 'Failed to submit report');
     },
   });
