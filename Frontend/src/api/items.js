@@ -1,9 +1,19 @@
-import { apiClient } from './client';
+import { uploadItemImage } from './storage';
 
 /**
  * @typedef {import('./types').ItemResponse} ItemResponse
  * @typedef {import('./types').PageItemResponse} PageItemResponse
  */
+
+/**
+ * Upload an image file to Supabase Storage.
+ * @param {File} file
+ * @returns {Promise<{url: string}>}
+ */
+export const uploadImage = async (file) => {
+  const url = await uploadItemImage(file);
+  return { url };
+};
 
 /**
  * Browse lost and found items.

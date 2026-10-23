@@ -6,11 +6,14 @@ import {
   Upload,
   X,
   AlertCircle,
-  Calendar as CalendarIcon
+  Calendar as CalendarIcon,
+  Loader2
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { cn } from '../../utils/cn';
+import { uploadImage } from '../../api/items';
+import { config } from '../../config';
 
 // Validation Schema
 const itemSchema = z.object({
@@ -26,7 +29,7 @@ const itemSchema = z.object({
     const date = new Date(val);
     return date <= new Date();
   }, { message: 'Event date cannot be in the future' }),
-  image_url: z.string().url('Invalid image URL').optional().or(z.literal('')),
+  image_url: z.string().optional().or(z.literal('')),
 });
 
 /**
@@ -60,15 +63,52 @@ const ItemForm = ({
   });
 
   const itemType = watch('item_type');
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState(
+    initialData?.image_url || null
+  );
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result);
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // Validate size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError('File size exceeds 5MB limit');
+      return;
     }
+
+    // Validate type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setUploadError('Invalid file format. Please use JPG, PNG or WebP');
+      return;
+    }
+
+    setUploadError(null);
+
+    // Show local preview immediately
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
+
+    try {
+      setUploading(true);
+      const { url } = await uploadImage(file);
+
+      setValue('image_url', url);
+    } catch (err) {
+      setUploadError(err.message || 'Failed to upload image');
+      setImagePreview(null);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    setImagePreview(null);
+    setValue('image_url', '');
   };
 
   return (
@@ -122,7 +162,7 @@ const ItemForm = ({
           </label>
           <Input
             {...register('title')}
-            placeholder="e.g. Blue leather wallet"
+            placeholder="e.g. Blue leather leather wallet"
             className={errors.title ? "border-danger" : ""}
           />
           {errors.title && (
@@ -188,7 +228,7 @@ const ItemForm = ({
           <select
             {...register('category_id')}
             className={cn(
-              "w-full px-4 py-3 rounded-xl border bg-surface text-ink focus:ring-2 focus:ring-cobalt-500 focus:border-cobalt-500 outline-none transition-all",
+              "w-full px-4 py-3 rounded-xl border bg-surface text-ink focus:ring-2 focus:ring-cobalt-500 focus:border-s-cobalt-500 outline-none transition-all",
               errors.category_id ? "border-danger" : "border-line"
             )}
           >
@@ -220,7 +260,7 @@ const ItemForm = ({
               />
               <button
                 type="button"
-                onClick={() => setImagePreview(null)}
+                onClick={removeImage}
                 className="absolute top-3 right-3 p-2 bg-white/90 text-danger rounded-full shadow-sm hover:bg-white transition-colors"
               >
                 <X className="w-4 h-4" />
@@ -231,19 +271,30 @@ const ItemForm = ({
               className="flex flex-col items-center justify-center w-full aspect-video rounded-2xl border-2 border-dashed border-line bg-surface hover:bg-line-50 cursor-pointer transition-all group-hover:border-cobalt-300"
             >
               <div className="flex flex-col items-center justify-center py-12 space-y-3">
-                <div className="p-3 bg-cobalt-50 text-cobalt-600 rounded-full group-hover:bg-cobalt-100 transition-colors">
-                  <Upload className="w-6 h-6" />
+                <div className={cn(
+                  "p-3 rounded-full transition-colors",
+                  uploading ? "bg-cobalt-100 text-cobalt-600" : "bg-cobalt-50 text-cobalt-600"
+                )}>
+                  {uploading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Upload className="w-6 h-6" />}
                 </div>
                 <div className="text-center">
-                  <p className="text-sm font-medium text-ink">Click to upload image</p>
+                  <p className="text-sm font-medium text-ink">
+                    {uploading ? 'Uploading image...' : 'Click to upload image'}
+                  </p>
                   <p className="text-xs text-line-500">PNG, JPG or JPEG (max. 5MB)</p>
                 </div>
+                {uploadError && (
+                  <p className="text-xs text-danger mt-2 flex items-center justify-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> {uploadError}
+                  </p>
+                )}
               </div>
               <input
                 type="file"
                 className="hidden"
                 accept="image/*"
                 onChange={handleImageChange}
+                disabled={uploading}
               />
             </label>
           )}
@@ -255,7 +306,7 @@ const ItemForm = ({
           type="submit"
           size="lg"
           className="px-8"
-          isLoading={isSubmitting}
+          isLoading={isSubmitting || uploading}
         >
           Submit Report
         </Button>
