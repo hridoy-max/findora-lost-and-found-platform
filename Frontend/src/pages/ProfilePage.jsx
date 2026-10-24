@@ -1,11 +1,14 @@
 
 
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, Phone, MapPin } from 'lucide-react';
 import { cn } from '../utils/cn';
+import { Button } from '../components/ui/Button';
 
 const ProfilePage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (!user) {
     return (
@@ -58,9 +61,9 @@ const ProfilePage = () => {
           </div>
 
           <div className="pt-4">
-            <button className="w-full py-3 bg-cobalt text-surface rounded-xl font-medium hover:bg-cobalt/90 transition-colors shadow-sm">
+            <Button className="w-full py-3 bg-cobalt text-surface rounded-xl font-medium hover:bg-cobalt/90 transition-colors shadow-sm" onClick={() => navigate('/profile/edit')}>
               Edit Profile Details
-            </button>
+            </Button>
           </div>
         </section>
       </div>

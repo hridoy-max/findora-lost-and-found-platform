@@ -12,20 +12,26 @@ import { Input } from '../components/ui/Input';
 import { useListParams } from '../hooks/useListParams';
 
 const BrowseItemsPage = () => {
-  const { params, setParam } = useListParams({
+  const { params, setParam, setParams } = useListParams({
     page: 1,
     page_size: 12,
     sort_by: 'created_at',
     order: 'desc',
   });
 
-  const { data: categories, isLoading: categoriesLoading } = useQuery({
+  const { data: categoryData, isLoading: categoriesLoading } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
       const res = await getCategories();
       return normalizeList(res);
     },
   });
+
+  const categories = Array.isArray(categoryData)
+    ? categoryData
+    : (categoryData?.data && Array.isArray(categoryData.data))
+      ? categoryData.data
+      : [];
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['items', params],
@@ -36,7 +42,7 @@ const BrowseItemsPage = () => {
           page_size: params.page_size,
           search: params.search,
           item_type: params.item_type === 'all' ? '' : params.item_type,
-          category_id: params.category_id,
+          category_id: params.category_id === 'all' ? '' : params.category_id,
           status: params.status === 'all' ? '' : params.status,
           start_date: params.start_date,
           end_date: params.end_date,
@@ -63,18 +69,15 @@ const BrowseItemsPage = () => {
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => {
-            setParam('search', '');
-            setParam('item_type', 'all');
-            setParam('status', 'all');
-            setParam('category_id', 'all');
+            setParams({
+              search: '',
+              item_type: 'all',
+              status: 'all',
+              category_id: 'all',
+            });
           }}>Clear All</Button>
         </div>
       </section>
-
-      {/* Debugging info - remove in production */}
-      <div className="mb-4 p-2 bg-yellow-100 text-yellow-800 text-xs font-mono rounded border border-yellow-200 overflow-hidden truncate">
-        Current Filters: {JSON.stringify(params)}
-      </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters Sidebar */}
@@ -84,9 +87,9 @@ const BrowseItemsPage = () => {
               <label className="text-sm font-bold text-ink mb-3 flex items-center gap-2">
                 <Search size={16} /> Search
               </label>
-              <Input 
-                placeholder="Title or ID..." 
-                value={params.search} 
+              <Input
+                placeholder="Title or ID..."
+                value={params.search}
                 onChange={e => setParam('search', e.target.value)}
               />
             </div>
@@ -113,7 +116,7 @@ const BrowseItemsPage = () => {
               </label>
               <div className="flex flex-col gap-2">
                 {['all', 'lost', 'found'].map(type => (
-                  <button 
+                  <button
                     key={type}
                     onClick={() => setParam('item_type', type)}
                     className={cn(
@@ -131,7 +134,7 @@ const BrowseItemsPage = () => {
               <label className="text-sm font-bold text-ink mb-3 flex items-center gap-2">Status</label>
               <div className="flex flex-col gap-2">
                 {['all', 'open', 'claimed', 'returned'].map(status => (
-                  <button 
+                  <button
                     key={status}
                     onClick={() => setParam('status', status)}
                     className={cn(
@@ -156,14 +159,14 @@ const BrowseItemsPage = () => {
               ))}
             </div>
           ) : isError ? (
-            <ErrorState 
-              title="Failed to load items" 
-              message="We couldn't fetch the reports. Please try again." 
-              onRetry={refetch} 
+            <ErrorState
+              title="Failed to load items"
+              message="We couldn't fetch the reports. Please try again."
+              onRetry={refetch}
             />
           ) : data?.length === 0 ? (
-            <EmptyState 
-              title="No items match your search" 
+            <EmptyState
+              title="No items match your search"
               description="Try adjusting your filters or clearing the search to find more reports."
               action={<Button onClick={() => setParam('search', '')}>Clear Search</Button>}
             />
@@ -174,10 +177,10 @@ const BrowseItemsPage = () => {
                   <ItemCard key={item.id} item={item} />
                 ))}
               </div>
-              <Pagination 
-                totalPages={totalPages} 
-                currentPage={params.page} 
-                onPageChange={(p) => setParam('page', p)} 
+              <Pagination
+                totalPages={totalPages}
+                currentPage={params.page}
+                onPageChange={(p) => setParam('page', p)}
               />
             </>
           )}

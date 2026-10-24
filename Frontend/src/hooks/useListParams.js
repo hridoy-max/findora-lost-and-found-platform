@@ -19,21 +19,28 @@ export function useListParams(defaults = {}) {
     order: searchParams.get('order') || defaults.order || 'desc',
   };
 
-  const setParam = (key, value) => {
+  const setParams = (paramsUpdate) => {
     const newParams = new URLSearchParams(searchParams);
 
-    if (value !== undefined && value !== null && value !== '') {
-      newParams.set(key, value);
-    } else {
-      newParams.delete(key);
-    }
+    Object.entries(paramsUpdate).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        newParams.set(key, value);
+      } else {
+        newParams.delete(key);
+      }
+    });
 
-    // Reset page to 1 when a filter changes
-    if (key !== 'page') {
+    // Reset page to 1 when any filter changes
+    const isPageUpdate = Object.keys(paramsUpdate).some(k => k === 'page');
+    if (!isPageUpdate) {
       newParams.set('page', '1');
     }
     setSearchParams(newParams);
   };
 
-  return { params, setParam };
+  const setParam = (key, value) => {
+    setParams({ [key]: value });
+  };
+
+  return { params, setParam, setParams };
 }

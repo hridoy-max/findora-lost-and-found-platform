@@ -11,11 +11,13 @@ import RegisterPage from './pages/RegisterPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ProfilePage from './pages/ProfilePage';
+import EditProfilePage from './pages/EditProfilePage';
 import HomePage from './pages/HomePage';
 import BrowseItemsPage from './pages/BrowseItemsPage';
 import ItemDetailPage from './pages/ItemDetailPage';
 import CreateReportPage from './pages/CreateReportPage';
 import EditReportPage from './pages/EditReportPage';
+import MyItemsPage from './pages/MyItemsPage';
 import MyClaimsPage from './pages/MyClaimsPage';
 import ClaimDetailPage from './pages/ClaimDetailPage';
 import ItemClaimsPage from './pages/ItemClaimsPage';
@@ -39,8 +41,10 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/items" element={<BrowseItemsPage />} />
             <Route path="/items/:id" element={<ItemDetailPage />} />
+            <Route path="/report" element={<ProtectedRoute><CreateReportPage /></ProtectedRoute>} />
             <Route path="/report/new" element={<ProtectedRoute><CreateReportPage /></ProtectedRoute>} />
             <Route path="/report/edit/:id" element={<ProtectedRoute><EditReportPage /></ProtectedRoute>} />
+            <Route path="/my-items" element={<ProtectedRoute><MyItemsPage /></ProtectedRoute>} />
             <Route path="/my-claims" element={<ProtectedRoute><MyClaimsPage /></ProtectedRoute>} />
             <Route path="/claims/:id" element={<ProtectedRoute><ClaimDetailPage /></ProtectedRoute>} />
             <Route path="/items/:id/claims" element={<ProtectedRoute><ItemClaimsPage /></ProtectedRoute>} />
@@ -56,6 +60,7 @@ function App() {
             <Route path="/forgot-password" element={<GuestRoute><ForgotPasswordPage /></GuestRoute>} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            <Route path="/profile/edit" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

@@ -27,6 +27,12 @@ const AdminCategoriesPage = () => {
     keepPreviousData: true,
   });
 
+  const categories = Array.isArray(data)
+    ? data
+    : (data?.data && Array.isArray(data.data))
+      ? data.data
+      : [];
+
   const saveMutation = useMutation({
     mutationFn: (data) => {
       if (data.id) {
@@ -79,9 +85,9 @@ const AdminCategoriesPage = () => {
       key: 'is_active',
       label: 'Status',
       render: (val) => (
-        <Badge variant={val ? 'found' : 'gray'}>
-          {val ? 'Active' : 'Inactive'}
-        </Badge>
+        <div className="flex items-center gap-1.5 text-xs">
+          {val ? <span className="text-found">● Active</span> : <span className="text-danger">● Inactive</span>}
+        </div>
       )
     },
     {
@@ -104,7 +110,7 @@ const AdminCategoriesPage = () => {
             variant="ghost"
             size="sm"
             onClick={() => setConfirmAction({ type: 'delete', id: row.id })}
-            title="Delete Category"
+            title="Delete"
             className="text-danger"
             disabled={row.items_count > 0}
           >
@@ -137,7 +143,7 @@ const AdminCategoriesPage = () => {
       <section>
         <DataTable
           columns={columns}
-          data={data?.data || []}
+          data={categories}
           isLoading={isLoading}
           onSort={(key) => setParams({ ...params, sort_by: key })}
           currentSort={{ key: params.sort_by || 'name', order: params.order || 'asc' }}

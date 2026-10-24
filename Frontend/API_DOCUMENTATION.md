@@ -183,8 +183,22 @@ All errors return a JSON body: `{"detail": "Error message"}`.
 - **Response (`200`)**: `CategoryResponse`.
 - **Errors**: `404` if not found or inactive.
 
+#### Upload Image
+`POST /images/upload` | **Authenticated**
+- **Purpose**: Upload an image file to be used in a report.
+- **Request**: `multipart/form-data`
+  - `file`: Binary image file (Required).
+- **Constraints**:
+  - Formats: JPG, JPEG, PNG, WebP.
+  - Max size: 5MB.
+- **Response (`201`)**:
+  - `url`: Relative path to the uploaded image (e.g., `/static/uploads/abc.jpg`).
+  - `filename`: Unique filename of the uploaded image.
+- **Errors**: `413` if file too large; `400` for invalid format; `401` if unauthorized.
+
+---
+
 #### Create Item Report
-`POST /items` | **Authenticated**
 - **Purpose**: Report a lost or found item.
 - **Request Body**:
   | Field | Type | Required | Constraints |

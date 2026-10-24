@@ -31,6 +31,7 @@ const ItemDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const {
     data: item,
@@ -51,14 +52,6 @@ const ItemDetailPage = () => {
     enabled: !!item && item.status === 'returned',
   });
 
-  if (isLoading) return <ItemDetailSkeleton />;
-  if (isError) return <ErrorState message="Could not load item details" onRetry={refetch} />;
-  if (!item) return <ErrorState message="Item not found" />;
-
-  const isReporter = user?.id === item.reporter.id;
-  const isAdmin = user?.role === 'admin';
-  const queryClient = useQueryClient();
-
   const { mutateAsync: closeReport, isPending: isClosing } = useMutation({
     mutationFn: (itemId) => closeItem(itemId),
     onSuccess: () => {
@@ -69,6 +62,13 @@ const ItemDetailPage = () => {
       toast.error(err.message || 'Failed to close report');
     },
   });
+
+  if (isLoading && !item) return <ItemDetailSkeleton />;
+  if (isError) return <ErrorState message="Could not load item details" onRetry={refetch} />;
+  if (!item) return <ErrorState message="Item not found" />;
+
+  const isReporter = user?.id === item.reporter.id;
+  const isAdmin = user?.role === 'admin';
 
   const statusColors = {
     open: 'bg-cobalt-100 text-cobalt-700 border-cobalt-200',
@@ -176,7 +176,7 @@ const ItemDetailPage = () => {
                 <Button
                   variant="secondary"
                   className="flex-1"
-                  onClick={() => navigate(`/items/${id}/edit`)}
+                  onClick={() => navigate(`/report/edit/${id}`)}
                 >
                   <Edit3 className="w-4 h-4 mr-2" />
                   Edit Report

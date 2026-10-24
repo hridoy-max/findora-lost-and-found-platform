@@ -38,7 +38,9 @@ const EditReportPage = () => {
 
   // 3. Mutation to update the item
   const mutation = useMutation({
-    mutationFn: updateItem,
+    mutationFn: async ({ itemId, data }) => {
+      return updateItem(itemId, data);
+    },
     onSuccess: () => {
       toast.success('Report updated successfully!');
       queryClient.invalidateQueries({ queryKey: ['item', id] });
@@ -46,7 +48,16 @@ const EditReportPage = () => {
       navigate(`/items/${id}`);
     },
     onError: (error) => {
-      toast.error(error.response?.data?.detail || 'Failed to update report');
+      const message = error.response?.data?.detail;
+      if (typeof message === 'string') {
+        toast.error(message);
+      } else if (Array.isArray(message)) {
+        // FastAPI validation errors are arrays of objects
+        const firstError = message[0]?.msg || 'Validation error';
+        toast.error(firstError);
+      } else {
+        toast.error('Failed to update report');
+      }
     },
   });
 
@@ -70,7 +81,11 @@ const EditReportPage = () => {
 
   if (!itemData) return <ErrorState message="Item not found" />;
 
-  const categories = categoryData?.data || [];
+  const categories = Array.isArray(categoryData)
+    ? categoryData
+    : (categoryData?.data && Array.isArray(categoryData.data))
+      ? categoryData.data
+      : [];
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
@@ -85,6 +100,7 @@ const EditReportPage = () => {
         <ItemForm
           initialData={itemData}
           onSubmit={handleFormSubmit}
+          onCancel={() => navigate(-1)}
           isSubmitting={mutation.isPending}
           categories={categories}
         />

@@ -54,23 +54,25 @@ const Navbar = () => {
                   <button className="p-2 rounded-full hover:bg-paper transition-colors">
                     <User size={20} className="text-ink" />
                   </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-surface border border-line rounded-xl shadow-lg py-2 hidden group-hover:block z-50">
-                    {userLinks.map(link => (
-                      <Link key={link.path} to={link.path} className="flex items-center gap-3 px-4 py-2 text-sm text-ink hover:bg-paper transition-colors">
-                        <link.icon size={16} /> {link.name}
-                      </Link>
-                    ))}
-                    {isAdmin && (
-                      <Link to="/admin" className="flex items-center gap-3 px-4 py-2 text-sm text-cobalt font-bold hover:bg-paper transition-colors border-t border-line">
-                        Admin Panel
-                      </Link>
-                    )}
-                    <button
-                      onClick={logout}
-                      className="flex items-center gap-3 px-4 py-2 text-sm text-danger hover:bg-paper transition-colors w-full text-left"
-                    >
-                      <LogOut size={16} /> Sign Out
-                    </button>
+                  <div className="absolute right-0 pt-2 w-48 hidden group-hover:block z-50">
+                    <div className="bg-surface border border-line rounded-xl shadow-lg py-2">
+                      {userLinks.map(link => (
+                        <Link key={link.path} to={link.path} className="flex items-center gap-3 px-4 py-2 text-sm text-ink hover:bg-paper transition-colors">
+                          <link.icon size={16} /> {link.name}
+                        </Link>
+                      ))}
+                      {isAdmin && (
+                        <Link to="/admin" className="flex items-center gap-3 px-4 py-2 text-sm text-cobalt font-bold hover:bg-paper transition-colors border-t border-line">
+                          Admin Panel
+                        </Link>
+                      )}
+                      <button
+                        onClick={logout}
+                        className="flex items-center gap-3 px-4 py-2 text-sm text-danger hover:bg-paper transition-colors w-full text-left"
+                      >
+                        <LogOut size={16} /> Sign Out
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -94,9 +96,9 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-surface border-b border-line px-4 py-4 flex flex-col gap-4">
           {navLinks.map(link => (
-            <Link 
-              key={link.path} 
-              to={link.path} 
+            <Link
+              key={link.path}
+              to={link.path}
               onClick={() => setIsOpen(false)}
               className={cn(
                 "text-lg font-medium py-2",

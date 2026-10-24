@@ -23,7 +23,11 @@ const AdminDashboardPage = () => {
     refetch
   } = useQuery({
     queryKey: ['admin-dashboard'],
-    queryFn: getAdminDashboard,
+    queryFn: async () => {
+      const res = await getAdminDashboard();
+      console.log('Admin Dashboard API Response:', res);
+      return res;
+    },
     refetchInterval: 60000, // Refresh every minute
   });
 
@@ -40,7 +44,7 @@ const AdminDashboardPage = () => {
         </div>
       </header>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <StatCard
           label="Total Users"
           value={data.total_users}
@@ -62,7 +66,7 @@ const AdminDashboardPage = () => {
           icon={Package}
         />
         <StatCard
-          label="Open"
+          label="Open Reports"
           value={data.open_items}
           icon={Clock}
         />
@@ -72,7 +76,7 @@ const AdminDashboardPage = () => {
           icon={AlertCircle}
         />
         <StatCard
-          label="Returned"
+          label="Returned Items"
           value={data.returned_items}
           icon={CheckCircle}
         />

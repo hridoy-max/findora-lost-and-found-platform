@@ -18,10 +18,14 @@ const AdminUsersPage = () => {
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['admin-users', params],
-    queryFn: () => getAdminUsers({
-      page_size: 12,
-      ...params
-    }),
+    queryFn: async () => {
+      const res = await getAdminUsers({
+        page_size: 12,
+        ...params
+      });
+      console.log('Admin Users API Response:', res);
+      return res;
+    },
     keepPreviousData: true,
   });
 

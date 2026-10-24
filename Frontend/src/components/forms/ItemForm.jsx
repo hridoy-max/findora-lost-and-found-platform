@@ -39,6 +39,7 @@ const itemSchema = z.object({
 const ItemForm = ({
   initialData = null,
   onSubmit,
+  onCancel,
   isSubmitting = false,
   categories = [],
   className = ""
@@ -301,7 +302,17 @@ const ItemForm = ({
         </div>
       </div>
 
-      <div className="flex justify-end pt-6">
+      <div className="flex justify-end gap-3 pt-6">
+        {onCancel && (
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            onClick={onCancel}
+          >
+            Cancel
+          </Button>
+        )}
         <Button
           type="submit"
           size="lg"
