@@ -1,8 +1,8 @@
 
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../context/AuthContext';
-import { getItemById } from '../api/items';
+import { getItemById, closeItem } from '../api/items';
 import { getItemReturn } from '../api/returns';
 import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
@@ -21,6 +21,7 @@ import {
 import { format } from 'date-fns';
 import { cn } from '../utils/cn';
 import ReturnRecordCard from '../components/claims/ReturnRecordCard';
+import sonner from 'sonner';
 
 /**
  * @typedef {import('../api/types').ItemResponse} ItemResponse
@@ -56,6 +57,18 @@ const ItemDetailPage = () => {
 
   const isReporter = user?.id === item.reporter.id;
   const isAdmin = user?.role === 'admin';
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: closeReport, isPending: isClosing } = useMutation({
+    mutationFn: (itemId) => closeItem(itemId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['item', id] });
+      sonner.success('Report closed successfully');
+    },
+    onError: (err) => {
+      sonner.error(err.message || 'Failed to close report');
+    },
+  });
 
   const statusColors = {
     open: 'bg-cobalt-100 text-cobalt-700 border-cobalt-200',
@@ -170,15 +183,20 @@ const ItemDetailPage = () => {
                 </Button>
                 <Button
                   variant="outline"
+                  disabled={isClosing}
                   className="flex-1 text-danger hover:bg-danger-50 border-danger"
-                  onClick={() => {
+                  onClick={async () => {
                     if(window.confirm('Are you sure you want to close this report?')) {
-                      // Implementation of closeItem will be added in a mutation hook later
+                      try {
+                        await closeReport(id);
+                      } catch (e) {
+                        // Error handled by mutation
+                      }
                     }
                   }}
                 >
                   <XCircle className="w-4 h-4 mr-2" />
-                  Close Report
+                  {isClosing ? 'Closing...' : 'Close Report'}
                 </Button>
               </>
             )}

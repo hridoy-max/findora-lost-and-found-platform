@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { getItems } from '../api/items';
 import { Search, Filter } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { normalizeList } from '../utils/normalizeList';
@@ -21,7 +21,7 @@ const BrowseItemsPage = () => {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['items', params],
     queryFn: async () => {
-      const queryStr = new URLSearchParams({
+      const data = await getItems({
         page: params.page,
         page_size: params.page_size,
         search: params.search,
@@ -32,10 +32,8 @@ const BrowseItemsPage = () => {
         end_date: params.end_date,
         sort_by: params.sort_by,
         order: params.order,
-      }).toString();
-      
-      const res = await axios.get(`/api/v1/items?${queryStr}`);
-      return normalizeList(res.data);
+      });
+      return data;
     },
     placeholderData: (previousData) => previousData,
   });
