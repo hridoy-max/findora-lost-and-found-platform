@@ -21,7 +21,7 @@ import {
 import { format } from 'date-fns';
 import { cn } from '../utils/cn';
 import ReturnRecordCard from '../components/claims/ReturnRecordCard';
-import sonner from 'sonner';
+import { toast } from 'sonner';
 
 /**
  * @typedef {import('../api/types').ItemResponse} ItemResponse
@@ -63,10 +63,10 @@ const ItemDetailPage = () => {
     mutationFn: (itemId) => closeItem(itemId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['item', id] });
-      sonner.success('Report closed successfully');
+      toast.success('Report closed successfully');
     },
     onError: (err) => {
-      sonner.error(err.message || 'Failed to close report');
+      toast.error(err.message || 'Failed to close report');
     },
   });
 

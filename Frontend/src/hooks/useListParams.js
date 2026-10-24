@@ -21,11 +21,13 @@ export function useListParams(defaults = {}) {
 
   const setParam = (key, value) => {
     const newParams = new URLSearchParams(searchParams);
-    if (value) {
+
+    if (value !== undefined && value !== null && value !== '') {
       newParams.set(key, value);
     } else {
       newParams.delete(key);
     }
+
     // Reset page to 1 when a filter changes
     if (key !== 'page') {
       newParams.set('page', '1');

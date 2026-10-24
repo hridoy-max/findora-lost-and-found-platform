@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getItems } from '../api/items';
+import { getCategories } from '../api/categories';
 import { Search, Filter } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { normalizeList } from '../utils/normalizeList';
@@ -18,22 +19,35 @@ const BrowseItemsPage = () => {
     order: 'desc',
   });
 
+  const { data: categories, isLoading: categoriesLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const res = await getCategories();
+      return normalizeList(res);
+    },
+  });
+
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['items', params],
     queryFn: async () => {
-      const data = await getItems({
-        page: params.page,
-        page_size: params.page_size,
-        search: params.search,
-        item_type: params.item_type === 'all' ? '' : params.item_type,
-        category_id: params.category_id,
-        status: params.status === 'all' ? '' : params.status,
-        start_date: params.start_date,
-        end_date: params.end_date,
-        sort_by: params.sort_by,
-        order: params.order,
-      });
-      return data;
+      const filteredParams = Object.fromEntries(
+        Object.entries({
+          page: params.page,
+          page_size: params.page_size,
+          search: params.search,
+          item_type: params.item_type === 'all' ? '' : params.item_type,
+          category_id: params.category_id,
+          status: params.status === 'all' ? '' : params.status,
+          start_date: params.start_date,
+          end_date: params.end_date,
+          sort_by: params.sort_by,
+          order: params.order,
+        }).filter(([_, value]) => value !== '' && value !== null && value !== undefined)
+      );
+
+      console.log('Fetching items with params:', filteredParams);
+      const data = await getItems(filteredParams);
+      return normalizeList(data);
     },
     placeholderData: (previousData) => previousData,
   });
@@ -48,9 +62,19 @@ const BrowseItemsPage = () => {
           <p className="text-ink/60">Search through the community's lost and found reports</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => setParam('item_type', 'all')}>Clear All</Button>
+          <Button variant="secondary" onClick={() => {
+            setParam('search', '');
+            setParam('item_type', 'all');
+            setParam('status', 'all');
+            setParam('category_id', 'all');
+          }}>Clear All</Button>
         </div>
       </section>
+
+      {/* Debugging info - remove in production */}
+      <div className="mb-4 p-2 bg-yellow-100 text-yellow-800 text-xs font-mono rounded border border-yellow-200 overflow-hidden truncate">
+        Current Filters: {JSON.stringify(params)}
+      </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters Sidebar */}
@@ -65,6 +89,22 @@ const BrowseItemsPage = () => {
                 value={params.search} 
                 onChange={e => setParam('search', e.target.value)}
               />
+            </div>
+
+            <div>
+              <label className="text-sm font-bold text-ink mb-3 flex items-center gap-2">
+                <Filter size={16} /> Category
+              </label>
+              <select
+                value={params.category_id || 'all'}
+                onChange={e => setParam('category_id', e.target.value === 'all' ? '' : e.target.value)}
+                className="w-full px-3 py-2 rounded-md border border-line bg-surface text-ink text-sm outline-none focus:ring-2 focus:ring-cobalt-500"
+              >
+                <option value="all">All Categories</option>
+                {categories?.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
             </div>
 
             <div>
