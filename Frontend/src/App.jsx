@@ -30,6 +30,8 @@ import AdminItemsPage from './pages/admin/AdminItemsPage';
 import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
 import AdminClaimsPage from './pages/admin/AdminClaimsPage';
 import AdminLayout from './components/layout/AdminLayout';
+import ClaimFormPage from './pages/ClaimFormPage';
+import AdminItemDetailPage from './pages/admin/AdminItemDetailPage';
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/items" element={<BrowseItemsPage />} />
             <Route path="/items/:id" element={<ItemDetailPage />} />
+            <Route path="/items/:id/claim" element={<ProtectedRoute><ClaimFormPage /></ProtectedRoute>} />
             <Route path="/report" element={<ProtectedRoute><CreateReportPage /></ProtectedRoute>} />
             <Route path="/report/new" element={<ProtectedRoute><CreateReportPage /></ProtectedRoute>} />
             <Route path="/report/edit/:id" element={<ProtectedRoute><EditReportPage /></ProtectedRoute>} />
@@ -53,6 +56,7 @@ function App() {
             <Route path="/admin/users" element={<AdminRoute><AdminLayout><AdminUsersPage /></AdminLayout></AdminRoute>} />
             <Route path="/admin/users/:id" element={<AdminRoute><AdminLayout><AdminUserDetailPage /></AdminLayout></AdminRoute>} />
             <Route path="/admin/items" element={<AdminRoute><AdminLayout><AdminItemsPage /></AdminLayout></AdminRoute>} />
+            <Route path="/admin/items/:id" element={<AdminRoute><AdminLayout><AdminItemDetailPage /></AdminLayout></AdminRoute>} />
             <Route path="/admin/categories" element={<AdminRoute><AdminLayout><AdminCategoriesPage /></AdminLayout></AdminRoute>} />
             <Route path="/admin/claims" element={<AdminRoute><AdminLayout><AdminClaimsPage /></AdminLayout></AdminRoute>} />
             <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />

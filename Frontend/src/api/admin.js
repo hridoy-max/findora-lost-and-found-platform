@@ -79,6 +79,16 @@ export const deleteAdminUser = async (userId) => {
   await adminApi.delete(`${ADMIN_BASE}/users/${userId}`);
 };
 
+/**
+ * Get detailed information for a specific item for administrative review.
+ * @param {string} itemId
+ * @returns {Promise<ItemResponse>}
+ */
+export const getAdminItemById = async (itemId) => {
+  const response = await adminApi.get(`${ADMIN_BASE}/items/${itemId}`);
+  return response.data;
+};
+
 // --- Item Moderation ---
 
 /**
