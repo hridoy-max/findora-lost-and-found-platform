@@ -1,0 +1,171 @@
+# Findora Frontend Blueprint
+
+This document serves as the Source of Truth for the implementation of the Findora frontend. It maps the FastAPI backend functionality to a modern, scalable frontend architecture.
+
+## 1. Tech Stack Recommendation
+
+To complement the Python/FastAPI backend, the following modern stack is recommended:
+
+- **Framework**: `React 18+` (Functional components with Hooks)
+- **Build Tool**: `Vite` (for extremely fast development and optimized builds)
+- **Styling**: `Tailwind CSS` (utility-first CSS for rapid UI development and consistency)
+- **Routing**: `React Router v6` (declarative routing and protected route management)
+- **Data Fetching & State**: `TanStack Query` (formerly React Query)
+  - *Why*: Handles caching, loading/error states, and automatic re-fetching of items/claims without manual `useEffect` chains.
+- **HTTP Client**: `Axios` (with interceptors for JWT handling)
+- **Form Management**: `React Hook Form` + `Zod` (for client-side validation mirroring the backend Pydantic schemas)
+- **Icons**: `Lucide React` (clean, consistent iconography)
+- **Notifications**: `React Hot Toast` or `Sonner` (for API success/error feedback)
+
+---
+
+## 2. Folder Structure
+
+```text
+findora-frontend/
+├── public/
+├── src/
+│   ├── api/                    # API Service Layer
+│   │   ├── axiosInstance.js   # Axios config & interceptors
+│   │   ├── auth.service.js     # Auth endpoints
+│   │   ├── item.service.js     # Item & Category endpoints
+│   │   ├── claim.service.js    # Claim endpoints
+│   │   └── admin.service.js    # Admin endpoints
+│   ├── components/             # Reusable UI Components
+│   │   ├── ui/                 # Base components (Button, Input, Badge, Modal)
+│   │   ├── layout/             # Navbar, Footer, Sidebar, PageContainer
+│   │   ├── items/              # ItemCard, ItemFilters, ItemForm
+│   │   ├── claims/             # ClaimCard, ClaimForm
+│   │   └── shared/             # Pagination, SearchBar, LoadingSpinner
+│   ├── hooks/                  # Custom React Hooks
+│   │   ├── useAuth.js          # Auth state & permissions
+│   │   └── useIntersectionObserver.js
+│   ├── pages/                  # Page-level Components (Mapped to API)
+│   │   ├── auth/               # Login, Register, ForgotPwd, ResetPwd
+│   │   ├── discovery/          # Home, ItemDetails
+│   │   ├── reporting/          # ReportItem, MyItems
+│   │   ├── claiming/           # SubmitClaim, MyClaims, ClaimDetails
+│   │   ├── returns/            # RecordReturn, ReturnHistory
+│   │   └── admin/              # Dashboard, UserMgmt, ItemMod, CatMgmt
+│   ├── store/                  # Global State (Zustand or Context API)
+│   │   └── authStore.js         # User profile, Role, Token state
+│   ├── utils/                  # Helper functions
+│   │   ├── dateUtils.js        # Formatting timestamps
+│   │   └── validation.js       # Zod schemas
+│   ├── App.jsx                 # Route definitions & Providers
+│   └── main.jsx                # Entry point
+├── .env                        # VITE_API_URL
+├── tailwind.config.js
+└── package.json
+```
+
+---
+
+## 3. Page Mapping
+
+| Backend Journey | Frontend Page | Key Features |
+| :--- | :--- | :--- |
+| **Auth** | `/login` | Email/Password form, link to register/forgot-password |
+| | `/register` | Full name, Email, Password, Phone form |
+| | `/forgot-password` | Email input, generic success message |
+| | `/reset-password` | Token-based password update form |
+| **Discovery** | `/` (Home) | Search bar, Category filters, Paginated `ItemCard` list |
+| | `/items/:id` | Full details, "Claim this item" button (if `found` & `open`) |
+| **Reporting** | `/report` | Step 1: Category pick $\rightarrow$ Step 2: Item details (incl. image URL) |
+| | `/my-items` | List of own reports, Edit/Close buttons, Status badges |
+| **Claiming** | `/items/:id/claim` | Private ownership proof text area |
+| | `/my-claims` | List of submitted claims with current status (`pending`, etc.) |
+| | `/claims/:id` | Claim details; shows `counterparty_contact` if `approved` |
+| **Returns** | `/claims/:id/return` | Handover confirmation form (only for reporter/admin) |
+| | `/returns` | History of completed returns |
+| **Admin** | `/admin` | High-level stats (total users, items, pending claims) |
+| | `/admin/users` | User table, search/filter, Role/Status toggles |
+| | `/admin/items` | Master item list, moderation (Open $\leftrightarrow$ Closed) |
+| | `/admin/categories` | Category CRUD and active/inactive toggle |
+
+---
+
+## 4. State Management Strategy
+
+### JWT & Session Handling
+- **Storage**: Store `access_token` and `refresh_token` in `localStorage` (or HTTP-only cookies if configured in backend).
+- **Persistence**: A `Zustand` store (`authStore`) manages the current `user` object and `role`.
+- **Interceptors**:
+  - **Request**: Automatically attach `Authorization: Bearer <token>` to all `/api/v1` calls.
+  - **Response**: If a `401 Unauthorized` (Token expired) is received, the interceptor calls `/auth/refresh` to get new tokens and retries the original request seamlessly.
+- **Global States**:
+  - `loading`: Managed locally by TanStack Query `isLoading` states.
+  - `error`: Managed by a global `Toast` provider reacting to Axios interceptor errors.
+
+---
+
+## 5. API Service Layer
+
+The `src/api/` folder will mirror the backend `routes/` structure:
+
+- `auth.service.js` $\rightarrow$ `/auth/*`
+- `item.service.js` $\rightarrow$ `/items/*` & `/categories/*`
+- `claim.service.js` $\rightarrow$ `/claims/*` & `/items/{id}/claims`
+- `admin.service.js` $\rightarrow$ `/admin/*`
+
+**Example Pattern**:
+```javascript
+// item.service.js
+export const ItemService = {
+  getItems: (params) => axiosInstance.get('/items', { params }),
+  getItem: (id) => axiosInstance.get(`/items/${id}`),
+  createItem: (data) => axiosInstance.post('/items', data),
+  updateItem: (id, data) => axiosInstance.patch(`/items/${id}`, data),
+  closeItem: (id) => axiosInstance.patch(`/items/${id}/close`),
+};
+```
+
+---
+
+## 6. Component Breakdown
+
+### Reusable UI Components
+- `ItemCard`: Displays title, type (Lost/Found), status badge, category, and location.
+- `StatusBadge`: Color-coded badge based on `item_status` or `claim_status`.
+- `ProtectedRoute`: Higher-order component to restrict access based on authentication and `user_role`.
+- `Pagination`: Component to handle `page` and `page_size` updates.
+- `FormField`: Wrapper for labels, inputs, and Zod error messages.
+
+---
+
+## 7. Implementation Roadmap
+
+1. **Phase 1: Setup & Foundation**
+   - Initialize Vite + React + Tailwind.
+   - Configure `axiosInstance.js` with base URL and JWT interceptors.
+   - Implement `authStore` and `ProtectedRoute`.
+
+2. **Phase 2: Authentication Flow**
+   - Build Login, Register, and Password Reset pages.
+   - Connect to `/auth/*` endpoints.
+   - Verify token persistence and automatic refresh.
+
+3. **Phase 3: Discovery & Reporting**
+   - Implement Home page with search and filters.
+   - Build Item Details page.
+   - Create the multi-step "Report Item" form.
+   - Build "My Items" dashboard with update/close logic.
+
+4. **Phase 4: The Claiming Workflow**
+   - Implement "Submit Claim" form.
+   - Build "My Claims" list.
+   - Implement Claim Review UI for reporters/admins.
+   - Build the contact exchange view for approved claims.
+
+5. **Phase 5: Returns & Handover**
+   - Implement the Return recording page.
+   - Build the Return history view.
+
+6. **Phase 6: Admin Suite**
+   - Build Admin Dashboard with data visualizations (using chart libs like Recharts).
+   - Implement User, Item, and Category management tables.
+
+7. **Phase 7: Polish & QA**
+   - Implement global loading spinners and error toasts.
+   - Perform end-to-end testing of the "Report $\rightarrow$ Claim $\rightarrow$ Return" flow.
+   - Optimize for mobile responsiveness.

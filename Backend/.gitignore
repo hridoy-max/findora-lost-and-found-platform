@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Claude Code
+.claude/
+CLAUDE.md
+API_DOCUMENTATION.md
+frontend.md
+.claude_settings.json
+.claude_memory/
+*/.claude/
+*/CLAUDE.md
