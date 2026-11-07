@@ -23,17 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Claude Code
-.claude/
-CLAUDE.md
-Claude.md
-docs/plans/
-docs/solutions/
-"Api conflict.md"
-"Frontend spec.md"
-API_DOCUMENTATION.md
-openapi.json
-
 # Playwright
 /test-results/
 /playwright-report/
