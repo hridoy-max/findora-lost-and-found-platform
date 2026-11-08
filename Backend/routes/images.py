@@ -16,7 +16,11 @@ router = APIRouter(tags=["Images"])
 
 # Configuration
 UPLOAD_DIR = Path("uploads")
-UPLOAD_DIR.mkdir(exist_ok=True)
+try:
+    UPLOAD_DIR.mkdir(exist_ok=True)
+except OSError:
+    # Vercel production file system is read-only; ignore this error
+    pass
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 

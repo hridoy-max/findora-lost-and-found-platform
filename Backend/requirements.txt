@@ -5,8 +5,9 @@ psycopg[binary]
 pydantic-settings
 email-validator
 PyJWT
-pwdlib[bcrypt]
+passlib[bcrypt]
 alembic
 slowapi
 httpx
 pytest
+python-multipart

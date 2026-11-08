@@ -6,9 +6,9 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
-from routes import users, categories, items, claims, item_returns, admin, health, images
-from auth import auth as auth_routes
-from config import settings
+from Backend.routes import users, categories, items, claims, item_returns, admin, health, images
+from Backend.auth import auth as auth_routes
+from Backend.config import settings
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -58,9 +58,15 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
 
 # Router Registration
-app.mount("/static", StaticFiles(directory="static"), name="static")
-# Special mount for uploads if they are in a separate folder
-app.mount("/static/uploads", StaticFiles(directory="uploads"), name="uploads")
+try:
+    app.mount("/static", StaticFiles(directory="Backend/static"), name="static")
+except RuntimeError:
+    print("Warning: Backend/static directory not found, skipping static mount")
+
+try:
+    app.mount("/static/uploads", StaticFiles(directory="Backend/uploads"), name="uploads")
+except RuntimeError:
+    print("Warning: Backend/uploads directory not found, skipping uploads mount")
 
 app.include_router(health.router)
 
