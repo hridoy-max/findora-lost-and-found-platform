@@ -15,7 +15,7 @@ export async function uploadItemImage(file) {
   // Use the Supabase client initialized with the ANON key.
   // We REMOVED the manual setSession call because the local JWT
   // is incompatible with Supabase Storage.
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('findora-items')
     .upload(filePath, file);
 
@@ -25,7 +25,7 @@ export async function uploadItemImage(file) {
   }
 
   // Get the public URL for the uploaded file
-  const { data: publicUrlData } = supabase.storage
+  const { publicUrlData } = supabase.storage
     .from('findora-items')
     .getPublicUrl(filePath);
 
