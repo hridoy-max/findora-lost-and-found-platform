@@ -1,5 +1,10 @@
+import os
+from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
+
+_backend_env = Path(__file__).resolve().parent / ".env"
+_root_env = Path(__file__).resolve().parent.parent / ".env"
 
 class Settings(BaseSettings):
     # Database
@@ -32,6 +37,9 @@ class Settings(BaseSettings):
     DEMO_USER_EMAIL: str = "user@findora.test"
     DEMO_USER_PASSWORD: str = "change_me_User123"
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=[_backend_env, _root_env, ".env"],
+        extra="ignore",
+    )
 
 settings = Settings()

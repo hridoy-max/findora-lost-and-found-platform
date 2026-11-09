@@ -25,7 +25,7 @@ export async function uploadItemImage(file) {
   }
 
   // Get the public URL for the uploaded file
-  const { publicUrlData } = supabase.storage
+  const { data: publicUrlData } = supabase.storage
     .from('findora-items')
     .getPublicUrl(filePath);
 

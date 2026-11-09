@@ -1,3 +1,11 @@
+import os
+import sys
+
+# Ensure Backend directory is in sys.path to resolve internal imports
+backend_dir = os.path.dirname(os.path.abspath(__file__))
+if backend_dir not in sys.path:
+    sys.path.insert(0, backend_dir)
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -10,21 +18,28 @@ from Backend.routes import users, categories, items, claims, item_returns, admin
 from Backend.auth import auth as auth_routes
 from Backend.config import settings
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
 
 
 # Rate Limiter
 limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(title="Findora API", version="1.0.0")
 
+# CORS - Allowed origins: production frontend and local development
+cors_origins = [
+    "https://findora-frontend-fawn.vercel.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+if hasattr(settings, "CORS_ORIGINS") and settings.CORS_ORIGINS:
+    for origin in settings.CORS_ORIGINS.split(","):
+        cleaned = origin.strip().rstrip("/")
+        if cleaned and cleaned not in cors_origins:
+            cors_origins.append(cleaned)
+
 # CORS - MUST be one of the first middlewares added
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "https://findora-frontend-fawn.vercel.app",
-    ],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -45,13 +60,16 @@ async def integrity_exception_handler(request: Request, exc: IntegrityError):
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
-    # Manually add CORS headers to 500 responses so the browser shows the actual error
-    headers = {
-        "Access-Control-Allow-Origin": "http://localhost:5173",
-        "Access-Control-Allow-Credentials": "true",
-        "Access-Control-Allow-Methods": "*",
-        "Access-Control-Allow-Headers": "*",
-    }
+    origin = request.headers.get("origin")
+    headers = {}
+    if origin and origin in cors_origins:
+        headers = {
+            "Access-Control-Allow-Origin": origin,
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+            "Vary": "Origin",
+        }
     return JSONResponse(
         status_code=500,
         content={"detail": "Internal server error"},
